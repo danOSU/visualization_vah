@@ -18,6 +18,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor as gpr
 from sklearn.gaussian_process import kernels as krnl
 import seaborn as sns
 
+npc=5
 
 # %%
 # https://gist.github.com/beniwohli/765262
@@ -98,7 +99,7 @@ def predict_observables(model_parameters, Emulators, inverse_tf_matrix, SS_mean)
         raise TypeError('The input model_parameters array does not have the right dimensions')
     else:
         theta=np.array(theta).reshape(1,15)
-        for i in range(0,10):
+        for i in range(0,npc):
             mn,std=Emulators[i].predict(theta,return_std=True)
             mean.append(mn)
             variance.append(std**2)
@@ -122,7 +123,7 @@ def emu_predict(emu, params,inverse_tf_matrix, SS_mean):
     return Yemu_mean, Yemu_cov, time_emu
 
 # %%
-ALICE_cent_bins = np.array([[0,5],[5,10],[10,20],[20,30],[30,40],[40,50],[50,60],[60,70]]) 
+ALICE_cent_bins = np.array([[0,5],[5,10],[10,20],[20,30],[30,40],[40,50],[50,60],[60,70]])
 
 obs_cent_list = {
 'Pb-Pb-2760': {
@@ -165,7 +166,7 @@ def main():
   #  as determined by different parameters on the left sidebar.')
    # st.markdown('By default, these parameters are assigned the values\
    #  that fit the experimental data *best* (Best Guess).')
-    
+
 #    st.markdown(r'An important modelling ingredient is the\
 #     particlization model used to convert hydrodynamic fields \
 #     into individual hadrons. Three different viscous correction models \
