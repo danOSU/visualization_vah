@@ -209,6 +209,13 @@ def main():
     #print(design_min)
     #print(design_max)
     #updated params
+    #MAP = np.array([16.57232622,  0.05714793,  1.18536305,  0.88569411,  0.93453349,
+    #    0.14898859,  0.20862629,  0.11218337, -1.12039581,  1.58537076,
+    #    0.14338342,  0.17981994,  0.09043189,  0.12831789,  0.64081075])
+    MAP = np.array([26.15362668, -0.32770818,  0.803825  ,  0.71214722,  1.35978106,
+        0.15720997,  0.18496215,  0.04190095,  0.51648601,  0.12397726,
+        0.05252478,  0.19255562,  0.06805631,  0.08109898,  0.58375491])
+
     for i_s, s_name in enumerate(short_names.keys()):
         #minar = np.zeros(15)
         #maxar= np.ones(15)
@@ -216,7 +223,7 @@ def main():
         #print(ave_val.tolist())
         #print(type(ave_val.tolist()))
         p = st.sidebar.slider(s_name, min_value= float(minar[i_s]), max_value= float(maxar[i_s]),
-                              value=float(minar[i_s] + maxar[i_s])/2, step= 0.01)
+                              value=float(MAP[i_s]), step= 0.01)
         params.append(p)
 
     #get emu prediction
