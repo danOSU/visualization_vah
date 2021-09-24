@@ -222,7 +222,7 @@ def main():
     #get emu prediction
     Yemu_mean, Yemu_cov, time_emu = emu_predict(emu, params, inverse_tf_matrix, SS_mean)
     nplots = len(system_observables['Pb-Pb-2760'])
-    print(nplots)
+    #print(nplots)
     sns.set_context('poster')
     sns.set_style('whitegrid')
     fig, axs = plt.subplots(2,4,figsize=(25,15))
@@ -239,7 +239,7 @@ def main():
         y_exp_values = y_exp[last_obs:end_obs]
         y_exp_err_values = np.sqrt(y_exp_variance[last_obs:end_obs])
         cen_bin_mid = np.arange(0,len(cen_bins))
-        print(cen_bins[0])
+        #print(cen_bins[0])
         #print(y_values)
         #print(y_pred_err)
         ax.errorbar(cen_bin_mid, y_exp_values, y_exp_err_values, color = 'red', fmt='o')
