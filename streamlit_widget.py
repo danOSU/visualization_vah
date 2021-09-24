@@ -18,7 +18,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor as gpr
 from sklearn.gaussian_process import kernels as krnl
 import seaborn as sns
 
-npc=5
+npc=3
 
 # %%
 # https://gist.github.com/beniwohli/765262
