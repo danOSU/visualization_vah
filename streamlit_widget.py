@@ -39,14 +39,14 @@ v4_str='v'u'\u2084''{2}'
 short_names = {
                 'norm' : r'Energy Normalization', #0
                 'trento_p' : r'TRENTo Reduced Thickness', #1
-                'sigma_k' : r'Multiplicity Fluctuation', #2
                 'nucleon_width' : r'Nucleon width [fm]', #3
                 'dmin3' : r'Min. Distance btw. nucleons cubed [fm^3]', #4
+                'sigma_k' : r'Multiplicity Fluctuation', #2
                 'Tswitch' : 'Particlization temperature [GeV]', #16
                 'eta_over_s_T_kink_in_GeV' : r'Temperature of shear kink [GeV]', #7
+                'eta_over_s_at_kink' : r'Shear viscosity at kink', #10
                 'eta_over_s_low_T_slope_in_GeV' : r'Low-temp. shear slope [GeV^-1]', #8
                 'eta_over_s_high_T_slope_in_GeV' : r'High-temp shear slope [GeV^-1]', #9
-                'eta_over_s_at_kink' : r'Shear viscosity at kink', #10
                 'zeta_over_s_max' : r'Bulk viscosity max.', #11
                 'zeta_over_s_T_peak_in_GeV' : r'Temperature of max. bulk viscosity [GeV]', #12
                 'zeta_over_s_width_in_GeV' : r'Width of bulk viscosity [GeV]', #13
@@ -209,13 +209,17 @@ def main():
     #print(design_min)
     #print(design_max)
     #updated params
-    MAP = np.array([1.59767621e+01,  1.34470089e-02,  1.18324381e+00,  8.52215356e-01,
-        8.42518612e-01,  1.46967141e-01,  2.21495314e-01,  1.02723789e-01,
-       -1.19962861e+00,  1.57609374e+00,  1.40900595e-01,  2.15948951e-01,
-        9.85673880e-02, -8.10893332e-02,  6.18496083e-01])
+    MAP = np.array([16.57112226,  0.05712234,  1.18538221,  0.86145252,  0.98799686,
+        0.14898391,  0.20865709,  0.1121545 , -1.12117563,  1.58534083,
+        0.14337955,  0.17982499,  0.09039792,  0.12835018,  0.6408514 ])
+    MAP_mike = np.array([20.0, 0.063, 1.05, 0.98, 1.44, 0.136, 0.233, 0.096,
+                            -0.776, 0.37, 0.133, 0.12, 0.072, -0.122, 0.3])
+
     #MAP = np.array([26.15362668, -0.32770818,  0.803825  ,  0.71214722,  1.35978106,
     #    0.15720997,  0.18496215,  0.04190095,  0.51648601,  0.12397726,
     #    0.05252478,  0.19255562,  0.06805631,  0.08109898,  0.58375491])
+    init_param = st.sidebar.selectbox('Select model parametrs',['Best guess', 'MAP'])
+    frz = st.sidebar.checkbox('Freeze MAP predictions in green')
 
     for i_s, s_name in enumerate(short_names.keys()):
         #minar = np.zeros(15)
@@ -223,12 +227,20 @@ def main():
         #ave_val = np.zeros(15)
         #print(ave_val.tolist())
         #print(type(ave_val.tolist()))
-        p = st.sidebar.slider(s_name, min_value= float(minar[i_s]), max_value= float(maxar[i_s]),
-                              value=float(MAP[i_s]), step= 0.01)
+        if init_param == 'Best guess':
+            st.sidebar.text('MAP values are in bracket')
+            p = st.sidebar.slider(s_name+f'  ({MAP[i_s]:.3f})', min_value= float(minar[i_s]), max_value= float(maxar[i_s]),
+                                value=float(MAP_mike[i_s]), step= 0.00001)
+        if init_param == 'MAP':
+            st.sidebar.text('Best guess values are in bracket')
+            p = st.sidebar.slider(s_name+f'  ({MAP_mike[i_s]:.3f})', min_value= float(minar[i_s]), max_value= float(maxar[i_s]),
+                                value=float(MAP[i_s]), step= 0.00001)
         params.append(p)
 
     #get emu prediction
     Yemu_mean, Yemu_cov, time_emu = emu_predict(emu, params, inverse_tf_matrix, SS_mean)
+    if frz == 1:
+            Yemu_mean_MAP, Yemu_cov_MAP, time_emu_MAP = emu_predict(emu, MAP, inverse_tf_matrix, SS_mean)
     nplots = len(system_observables['Pb-Pb-2760'])
     #print(nplots)
     sns.set_context('poster')
@@ -252,6 +264,14 @@ def main():
         #print(y_pred_err)
         ax.errorbar(cen_bin_mid, y_exp_values, y_exp_err_values, color = 'red', fmt='o')
         ax.errorbar(cen_bin_mid, y_values, y_pred_err, color = 'blue')
+        if frz==1:
+            y_values_MAP = Yemu_mean_MAP.flatten()[last_obs:end_obs]
+            y_pred_err_MAP = np.sqrt(Yemu_cov_MAP.diagonal()[last_obs:end_obs])
+            #y_exp_values = y_exp[last_obs:end_obs]
+            #y_exp_err_values = np.sqrt(y_exp_variance[last_obs:end_obs])
+            #cen_bin_mid = np.arange(0,len(cen_bins))
+            ax.errorbar(cen_bin_mid, y_values_MAP , y_pred_err_MAP, color = 'green')
+
         ax.set_title(system_observables['Pb-Pb-2760'][i])
         if i==1:
             cen_bin_mid = cen_bin_mid[0:-1:2]
@@ -261,6 +281,7 @@ def main():
         plt.tight_layout()
         last_obs = end_obs
     st.write(fig)
+
     #redraw plots
     #make_plot_altair(observables, Yemu_mean, Yemu_cov, y_exp, idf)
     #make_plot_eta_zeta(params)
