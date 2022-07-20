@@ -20,7 +20,7 @@ from sklearn.gaussian_process import kernels as krnl
 import seaborn as sns
 
 
-sys.path.append('../visualization_vah/surmise/')
+sys.path.append('surmise/')
 #sys.path.append('/Users/dananjayaliyanage/git/analyze_vah/emulation')
 from surmise import *
 import pickle
