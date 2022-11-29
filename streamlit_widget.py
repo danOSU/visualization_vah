@@ -27,7 +27,7 @@ import pyximport
 pyximport.install(setup_args={"include_dirs":np.get_include()},
                   reload_support=True)
                   
-cal_name = 'VAH_' + 'PCSK' + '_calibrator_PTMC'
+cal_name = 'updated_VAH_PCSK_calibrator_PTMC'
 with open(cal_name + '.pkl' , 'rb') as file:
     cal = pickle.load(file)   
 
@@ -100,11 +100,11 @@ system = 'Pb-Pb-2760'
 
 # %%
 #@st.cache(allow_output_mutation=True, show_spinner=False)
-def load_emu():
-    #load the emulator
-    with open('PbPb2760_vah_emulators.dat',"rb") as f:
-        emu=pickle.load(f)
-    return emu
+# def load_emu():
+#     #load the emulator
+#     with open('PbPb2760_vah_emulators.dat',"rb") as f:
+#         emu=pickle.load(f)
+#     return emu
 
 # %%
 # def predict_observables(model_parameters, Emulators, inverse_tf_matrix, SS_mean):
