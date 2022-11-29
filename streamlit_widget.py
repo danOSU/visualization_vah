@@ -233,12 +233,12 @@ for obs_group in  obs_groups.keys():
 def main():
     st.title('Relativistic Heavy Ion Collisions Simulation with Viscous\
     Anisotropic Hydrodynamics')
-    st.markdown('### Initial Data exploration and Visualization')
     st.markdown('This widget is inspired from a similar [widget]\
     (https://jetscape.org/sims-widget/) made by [Derek Everett](https://www.linkedin.com/in/derekseverett/).')
     st.markdown('The experimentally measured observables by the \
     [ALICE collaboration](https://home.cern/science/experiments/alice) \
     are shown as red dots.')
+    st.markdown('The x axis show the mid centrality value for each centrality bin')
   #  st.markdown('The last row displays the temperature dependence of \
   #  the specific shear and bulk viscosities (red lines), \
   #  as determined by different parameters on the left sidebar.')
@@ -294,8 +294,8 @@ def main():
     #print(design_min)
     #print(design_max)
     #updated params
-    MAP = np.array([24.13700415, -0.19453601,  0.97201516,  0.92780229,  1.26233326, 0.13507499,  0.28643515,  0.05385407, -0.6567839 ,  0.55309067, 
-    0.11020714,  0.14247949,  0.03355921, -0.73659538,  0.53047712])
+    MAP = np.array([20.013, 0.038,  0.985,  0.878,  1.184, 0.146,  0.219,  0.094, -0.383 ,  0.493, 
+    0.044,  0.235,  0.032, 0.037,  0.653])
     # MAP with only 50 designs is the following
     #MAP = np.array([16.57112226,  0.05712234,  1.18538221,  0.86145252,  0.98799686,
     #    0.14898391,  0.20865709,  0.1121545 , -1.12117563,  1.58534083,
@@ -334,8 +334,14 @@ def main():
     nplots = len(system_observables['Pb-Pb-2760'])
     #print(nplots)
     sns.set_context('poster')
-    sns.set_style('whitegrid')
-    fig, axs = plt.subplots(3,4,figsize=(25,25))
+    sns.set(style='whitegrid', font_scale=2.5)
+    fig, axs = plt.subplots(3,4,figsize=(35,22))
+    plt.subplots_adjust(left=0.1,
+                    bottom=0.1,
+                    right=0.9,
+                    top=0.9,
+                    wspace=0.5,
+                    hspace=0.5)
     axs = axs.flatten()
     last_obs = 0
     for i in range(0,nplots):
@@ -367,8 +373,9 @@ def main():
             cen_bin_mid = cen_bin_mid[0:-1:2]
             cen_bins = cen_bins[0:-1:2]
         ax.set_xticks(cen_bin_mid.flatten())
-        ax.set_xticklabels(cen_bins, rotation =90)
-        plt.tight_layout()
+        ax.set_xticklabels([np.round((x+y)/2,3) for x,y in cen_bins], rotation =45)
+        ax.set_ylim(0)
+        #plt.tight_layout()
         last_obs = end_obs
     st.write(fig)
 
